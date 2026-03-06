@@ -38,3 +38,5 @@ wss.on('connection',(socket,request)=>{
 
 
 })
+
+console.log('WebSocket server is listening on port 8000')
