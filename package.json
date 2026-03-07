@@ -3,8 +3,14 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev":"node --watch src/index.js",
-    "start":"node src/index.js"
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "demo": "node src/crud-demo.js",
+    "seed": "node src/seed/seed.js"
+
   },
   "keywords": [],
   "author": "",
@@ -12,11 +18,17 @@
   "type": "module",
   "description": "",
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "dotenv": "^17.3.1",
+    "drizzle-orm": "^0.45.1",
     "express": "^5.2.1",
+    "pg": "^8.20.0",
     "ws": "^8.19.0"
   },
   "devDependencies": {
     "@types/node": "^25.3.3",
-    "@types/ws": "^8.18.1"
+    "@types/pg": "^8.18.0",
+    "@types/ws": "^8.18.1",
+    "drizzle-kit": "^0.31.9"
   }
 }
