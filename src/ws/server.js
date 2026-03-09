@@ -1,4 +1,4 @@
-import  {WebSocket} from 'ws';
+import  {WebSocket, WebSocketServer} from 'ws';
 
 // first create function to send json object to client 
 
