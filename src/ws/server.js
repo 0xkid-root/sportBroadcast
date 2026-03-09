@@ -13,7 +13,7 @@ function sendJson(socket,payload){
 
 function broadcast(wss,payload){
     for(const client of wss.clients){
-        if(client.readyState !== WebSocket.open) return ;
+        if(client.readyState !== WebSocket.open) continue ;
         client.send(JSON.stringify(payload));
     }
 }
@@ -31,10 +31,26 @@ export function attachWebSocketServer(server){
 
     wss.on('connection',(socket)=>{
         console.log('new client connected',socket.id);
+        socket.isAlive =true;// here i m creating isAlive varible and setup true
+
+        socket.on('pong',()=>{socket.isAlive = true});
+
+
         sendJson(socket,{type:'welcome to the '});
 
         socket.on('error',console.error);
     });
+
+    const interval =setInterval(()=>{
+        
+        wss.clients.forEach((ws)=>{
+            if(ws.isAlive === false) return ws.terminate();
+            ws.isAlive = false;
+            ws.ping();
+        })},30000);
+        wss.on('close',()=>{clearInterval(interval)});
+
+
 
     function broadcastMatchCreated(match){
         broadcast(wss,{type:'match_created',data:match});
