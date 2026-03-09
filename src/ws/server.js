@@ -1,4 +1,5 @@
 import  {WebSocket, WebSocketServer} from 'ws';
+import {wsArcjet} from './arcjet.js';
 
 // first create function to send json object to client 
 
@@ -29,7 +30,25 @@ export function attachWebSocketServer(server){
         maxPayload:1024 *1024,
     })
 
-    wss.on('connection',(socket)=>{
+    wss.on('connection',async (socket,req)=>{
+        if(wsArcjet){
+            try{
+                const  decision = await wsArcjet.protect(req);
+
+                if(decision.isDenied()){
+                    const code = decision.reason.isRateLimit() ? 1013 : 1008;
+                    const reason = decision.reason.isRateLimit() ? "Rate Limit exceeded" : " Access denied" ;
+                    socket.close(code,reason);
+                    return;
+                }
+
+            }catch( e){
+                console.error('WebSocket connection error:', e);
+                socket.close(1011,"Server security error");
+                return;
+            }
+        }
+
         console.log('new client connected',socket.id);
         socket.isAlive =true;// here i m creating isAlive varible and setup true
 
